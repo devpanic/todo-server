@@ -42,6 +42,10 @@ public class TodoService {
         todoRepository.save(toSave);
     }
 
+    public void deleteById(Long id){
+        todoRepository.deleteById(id);
+    }
+
     public Todo toUser(TodoEntity todoEntity){
         return new Todo(todoEntity.getId(), todoEntity.getTitle(), todoEntity.getContent(), todoEntity.getCreatedAt(), todoEntity.getUpdatedAt());
     }
