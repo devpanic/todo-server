@@ -3,6 +3,7 @@ package com.example.todoserver.service;
 import com.example.todoserver.domain.Todo;
 import com.example.todoserver.entity.TodoEntity;
 import com.example.todoserver.repository.TodoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,21 +19,50 @@ public class TodoService {
                 todoEntity ->  new Todo(todoEntity.getId(),todoEntity.getTitle(),todoEntity.getContent(),todoEntity.getCreatedAt(),todoEntity.getUpdatedAt())).toList();
     }
 
-    public void addTodo(Todo todo){
-        TodoEntity toSave = new TodoEntity();
+    public Todo getTodo(Long id){
+        TodoEntity todoEntity = todoRepository.findById(id)
+                .orElseThrow(()->new EntityNotFoundException());
+        return toUser(todoEntity);
+    }
 
-        toSave.setId(todo.getId());
-        toSave.setTitle(todo.getTitle());
-        toSave.setContent(todo.getContent());
+    public void addTodo(Todo todo){
+        TodoEntity toSave = toPersist(null, todo);
+
+        todoRepository.save(toSave);
+    }
+
+    public void modifyTodo(Long id, Todo todo){
+        TodoEntity toSave = todoRepository.findById(id)
+                        .orElseThrow(()->new EntityNotFoundException());
+        todo.setId(toSave.getId());
+        todo.setCreatedAt(toSave.getCreatedAt());
+        toSave = toPersist(toSave, todo);
+        toSave.setUpdatedAt(LocalDateTime.now());
+
+        todoRepository.save(toSave);
+    }
+
+    public Todo toUser(TodoEntity todoEntity){
+        return new Todo(todoEntity.getId(), todoEntity.getTitle(), todoEntity.getContent(), todoEntity.getCreatedAt(), todoEntity.getUpdatedAt());
+    }
+
+    public TodoEntity toPersist(TodoEntity exist, Todo todo){
+        if(exist == null){
+            exist = new TodoEntity();
+        }
+
+        exist.setId(todo.getId());
+        exist.setTitle(todo.getTitle());
+        exist.setContent(todo.getContent());
 
         if (todo.getCreatedAt() == null) {
-            toSave.setCreatedAt(LocalDateTime.now());
+            exist.setCreatedAt(LocalDateTime.now());
         }
 
         if (todo.getUpdatedAt() == null) {
-            toSave.setUpdatedAt(LocalDateTime.now());
+            exist.setUpdatedAt(LocalDateTime.now());
         }
 
-        todoRepository.save(toSave);
+        return exist;
     }
 }

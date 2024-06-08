@@ -5,7 +5,9 @@ import com.example.todoserver.service.TodoService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,8 +23,18 @@ public class TodoController {
         return todoService.getTodoList();
     }
 
+    @GetMapping("/{id}")
+    public Todo getTodoList(@PathVariable Long id){
+        return todoService.getTodo(id);
+    }
+
     @PostMapping
     public void addTodo(@RequestBody Todo todo){
         todoService.addTodo(todo);
+    }
+
+    @PutMapping("/{id}")
+    public void updateTodo(@PathVariable Long id, @RequestBody Todo todo){
+        todoService.modifyTodo(id, todo);
     }
 }
