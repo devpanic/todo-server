@@ -10,3 +10,6 @@ spring:
     username: todo_dba
     password: tiger123
     driver-class-name: com.mysql.cj.jdbc.Driver
+  logging:
+    level:
+      org.springframework.security: DEBUG
