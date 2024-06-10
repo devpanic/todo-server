@@ -18,14 +18,14 @@ public class SignupService {
 
     public User getUser(Long id){
         UserEntity user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException());
-        return new User(user.getUserNum(), user.getId(), user.getPassword(), user.getEmail());
+        return new User(user);
     }
 
     public boolean addUser(User user){
         String rawPassword = user.getPassword();
         String encoded = passwordEncoder.encode(rawPassword);
 
-        UserEntity newUser = new UserEntity(user.getUserNum(), user.getId(), encoded, user.getEmail());
+        UserEntity newUser = new UserEntity(user);
         userRepository.save(newUser);
         return true;
     }

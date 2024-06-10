@@ -1,5 +1,6 @@
 package com.example.todoserver.entity;
 
+import com.example.todoserver.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,14 +21,21 @@ import lombok.Setter;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userNum;
+    private Long id;
 
     @Column(nullable = false)
-    private String id;
+    private String userId;
 
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
     private String email;
+
+    public UserEntity(User user){
+        this.id = user.getId();
+        this.userId = user.getUserId();
+        this.password = user.getPassword();
+        this.email = user.getEmail();
+    }
 }
