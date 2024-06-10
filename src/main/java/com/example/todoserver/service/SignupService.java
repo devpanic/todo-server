@@ -26,6 +26,7 @@ public class SignupService {
         String encoded = passwordEncoder.encode(rawPassword);
 
         UserEntity newUser = new UserEntity(user);
+        newUser.setPassword(encoded);
         userRepository.save(newUser);
         return true;
     }

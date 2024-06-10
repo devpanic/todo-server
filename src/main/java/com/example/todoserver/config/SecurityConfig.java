@@ -22,9 +22,9 @@ public class SecurityConfig{
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/")
-                        .failureUrl("/login?error")
+                        .loginProcessingUrl("/login")
+//                        .defaultSuccessUrl("/")
+//                        .failureUrl("/login?error")
                         .permitAll()
                 )
                 .logout(LogoutConfigurer::permitAll) // 로그아웃은 누구나 가능
