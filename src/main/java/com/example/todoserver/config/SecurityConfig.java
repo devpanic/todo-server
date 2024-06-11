@@ -4,6 +4,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 import com.example.todoserver.repository.UserRepository;
 import com.example.todoserver.service.LoginService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,9 +18,10 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig{
-    @Autowired
-    private LoginService loginService;
+    private final LoginService loginService;
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -30,7 +32,7 @@ public class SecurityConfig{
                 )
                 .formLogin(form -> form
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/")
+                        .defaultSuccessUrl("/success")
                         .failureUrl("/login?error")
                         .permitAll()
                 )
@@ -49,6 +51,6 @@ public class SecurityConfig{
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(loginService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(loginService).passwordEncoder(passwordEncoder);
     }
 }
