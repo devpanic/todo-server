@@ -23,7 +23,6 @@ public class LoginController {
 
     @PostMapping
     public ResponseEntity<?> login(@RequestBody User user){
-        System.out.println("login method called");
         Optional<User> loginUserOpt = loginService.getUser(user.getUserId());
         if(loginUserOpt.isPresent()){
             User loginUser = loginUserOpt.get();

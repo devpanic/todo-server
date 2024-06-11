@@ -2,8 +2,12 @@ package com.example.todoserver.config;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+import com.example.todoserver.repository.UserRepository;
+import com.example.todoserver.service.LoginService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
@@ -14,6 +18,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig{
+    @Autowired
+    private LoginService loginService;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -23,8 +30,8 @@ public class SecurityConfig{
                 )
                 .formLogin(form -> form
                         .loginProcessingUrl("/login")
-//                        .defaultSuccessUrl("/")
-//                        .failureUrl("/login?error")
+                        .defaultSuccessUrl("/")
+                        .failureUrl("/login?error")
                         .permitAll()
                 )
                 .logout(LogoutConfigurer::permitAll) // 로그아웃은 누구나 가능
@@ -36,7 +43,12 @@ public class SecurityConfig{
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public static PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(loginService).passwordEncoder(passwordEncoder());
     }
 }

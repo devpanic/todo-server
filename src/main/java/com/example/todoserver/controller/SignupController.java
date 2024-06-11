@@ -3,7 +3,6 @@ package com.example.todoserver.controller;
 import com.example.todoserver.domain.User;
 import com.example.todoserver.service.SignupService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
